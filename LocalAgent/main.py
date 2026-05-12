@@ -4,7 +4,7 @@ from prompt import SYSTEM_PROMPT
 from tool import TOOL_MAP
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen3.5:0.8b"
+MODEL_NAME = "deepseek-r1:8b"
 
 def callModal(prompt_text: str) -> str:
     payload = {
@@ -54,14 +54,12 @@ def execute_tool(tool_name: str, arg: str) -> str:
     except Exception as e:
         return f"工具调用异常: {str(e)}"
 
-def runAgent(user_query : str, max_turn = 3):
-    # 利用列表存储对话历史，初步实现记忆功能
-    chat_history = [
-        {"role" : "system", "massage" : SYSTEM_PROMPT},
-        {"role" : "user", "massage" : user_query},
-    ]
+# 利用列表存储对话历史，初步实现记忆功能
+chat_history = [{"role" : "system", "massage" : SYSTEM_PROMPT}]
 
+def runAgent(user_query : str, max_turn = 1):
     turn = 0
+    chat_history.append({"role" : "user", "massage" : user_query})
     while turn < max_turn:
         turn +=1
         print("\n[INFO] 第{}次迭代".format(turn))
@@ -99,13 +97,13 @@ def runAgent(user_query : str, max_turn = 3):
 
 
 if __name__ == "__main__":
-    user_input = input("🔹 你想让 Agent 做什么？\n> ")
-    runAgent(user_input)
+    continue_ask = True
+    while continue_ask:
+        user_input = input("🔹 你想让 Agent 做什么？\n> ")
+        runAgent(user_input)
+        continue_ques = input("是否继续对话(y or n)?:\n")
+        while continue_ques not in ["y", "n"]:
+            continue_ques = input("你猪脑子吗?看不懂人话?滚回去重新输一遍，再错把你骨灰扬了！！！\n")
+        if continue_ques == "n":
+            break
     # 帮我查询当前时间？帮我列举出D:\github_project\agent_program中的所有文件和文件夹
-    
-
-
-
-        
-
-
