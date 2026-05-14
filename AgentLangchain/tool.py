@@ -19,19 +19,14 @@ def runSafeCommand(command: str) -> str:
         示例: runSafeCommand("ls C:\\Users")
         示例: runSafeCommand("ls D:\\test\\dir")
     '''
-    allowed = {
-        "ls": "powershell -Command \"Get-ChildItem -Path '{path}'\""
-    }
     parts = command.strip().split(maxsplit=1)
     cmd_name = parts[0].lower()
-    if cmd_name not in allowed:
-        return f"❌ 命令 '{cmd_name}' 不在白名单中。"
     
     path = parts[1].strip() if len(parts) > 1 else "."
     # 构造实际要执行的命令（使用 PowerShell）
-    full_cmd = allowed[cmd_name].format(path=path)
+    # full_cmd = allowed[cmd_name].format(path=path)
     try:
-        result = subprocess.run(full_cmd, shell=True, capture_output=True, text=True, timeout=10)
+        result = subprocess.run(parts, shell=True, capture_output=True, text=True, timeout=10)
         return result.stdout if result.returncode == 0 else result.stderr
     except Exception as e:
         return f"执行出错: {str(e)}"

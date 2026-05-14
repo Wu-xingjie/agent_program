@@ -24,6 +24,8 @@ if __name__ == "__main__":
             {"messages" : [{"role" : "user", "content" : user_input}]}
         )
         print(resp)
+        print("-------------------------------------")
+        print(resp["messages"][-1].content)
         
         continue_ques = input("是否继续对话(y or n)?:\n")
         while continue_ques not in ["y", "n"]:
