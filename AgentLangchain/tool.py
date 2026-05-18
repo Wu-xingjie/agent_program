@@ -14,17 +14,14 @@ def getCurTime() -> str:
 @tool
 def runSafeCommand(command: str) -> str:
     '''
-      执行一条允许的 PowerShell 命令。当前仅支持：
-        `ls <路径>`  
-        示例: runSafeCommand("ls C:\\Users")
-        示例: runSafeCommand("ls D:\\test\\dir")
+      执行一条安全的 Windows 命令，仅支持以下形式：
+    - ls <路径>     : 列出目录内容，例如 "ls D:\\test"
+
+    注意：command 参数必须是上述格式的字符串，不能包含管道符、PowerShell 专有命令（如 Get-Date）。
+    其他命令一律拒绝。
     '''
     parts = command.strip().split(maxsplit=1)
-    cmd_name = parts[0].lower()
-    
-    path = parts[1].strip() if len(parts) > 1 else "."
-    # 构造实际要执行的命令（使用 PowerShell）
-    # full_cmd = allowed[cmd_name].format(path=path)
+
     try:
         result = subprocess.run(parts, shell=True, capture_output=True, text=True, timeout=10)
         return result.stdout if result.returncode == 0 else result.stderr
